@@ -27,8 +27,8 @@ import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.material.icons.filled.Warning
@@ -173,7 +173,7 @@ fun ContactSupportDialog(
 
                 // Support Channels
                 SupportChannelRow(
-                    icon = Icons.Default.Send,
+                    icon = Icons.AutoMirrored.Filled.Send,
                     title = "Telegram Official Desk",
                     detail = "@SignalVerseSupport"
                 )

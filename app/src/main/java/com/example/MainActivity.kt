@@ -95,7 +95,6 @@ fun SignalVerseApp(
                 onOpenPrivacy = { viewModel.setPrivacyDialog(true) },
                 onOpenTerms = { viewModel.setTermsDialog(true) },
                 onOpenMarketingAssets = { viewModel.setMarketingDialog(true) },
-                onOpenBackendConfig = { viewModel.setBackendConfigDialog(true) },
                 onCloseDrawer = {
                     scope.launch { drawerState.close() }
                 }
@@ -131,8 +130,6 @@ fun SignalVerseApp(
                                 state = uiState,
                                 onCategorySelected = { cat -> viewModel.selectSignalCategory(cat) },
                                 onRefreshSignals = { viewModel.refreshSignals() },
-                                onSeedSignals = { viewModel.seedStarterSignals() },
-                                onOpenBackendConfig = { viewModel.setBackendConfigDialog(true) },
                                 onWatchRewardedAd = {
                                     if (activity != null) {
                                         AdMobManager.showRewardedInterstitial(activity) {
@@ -199,8 +196,7 @@ fun SignalVerseApp(
                                 onSignOut = { viewModel.signOut() },
                                 onOpenForgotPassword = { viewModel.setForgotPasswordDialog(true) },
                                 onSubmitForgotPassword = { viewModel.submitForgotPassword(it) },
-                                onDismissForgotPassword = { viewModel.setForgotPasswordDialog(false) },
-                                onOpenBackendConfig = { viewModel.setBackendConfigDialog(true) }
+                                onDismissForgotPassword = { viewModel.setForgotPasswordDialog(false) }
                             )
                         }
                     }
@@ -228,15 +224,5 @@ fun SignalVerseApp(
 
     if (uiState.showMarketingDialog) {
         MarketingAssetsDialog(onDismiss = { viewModel.setMarketingDialog(false) })
-    }
-
-    if (uiState.showBackendConfigDialog) {
-        BackendSettingsDialog(
-            isConfigured = uiState.isSupabaseConfigured,
-            statusText = uiState.supabaseStatusText,
-            onSaveConfig = { url, key -> viewModel.updateSupabaseConfig(url, key) },
-            onTestConnection = { viewModel.testSupabaseConnection() },
-            onDismiss = { viewModel.setBackendConfigDialog(false) }
-        )
     }
 }

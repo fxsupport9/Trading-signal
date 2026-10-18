@@ -137,8 +137,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         refreshSignals()
         refreshLiveMarketPrices()
         testSupabaseConnection()
-        com.example.data.AdMobManager.initialize(getApplication())
-        com.example.data.AdMobManager.loadRewardedInterstitial(getApplication())
+        com.example.data.AdMobManager.initialize(getApplication()) {
+            com.example.data.AdMobManager.loadRewardedInterstitial(getApplication())
+        }
     }
 
     fun selectTab(tab: AppTab) {

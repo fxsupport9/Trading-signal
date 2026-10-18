@@ -74,8 +74,6 @@ fun SignalsScreen(
     state: SignalUiState,
     onCategorySelected: (SignalCategory) -> Unit,
     onRefreshSignals: () -> Unit,
-    onSeedSignals: () -> Unit,
-    onOpenBackendConfig: () -> Unit,
     onWatchRewardedAd: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -328,10 +326,7 @@ fun SignalsScreen(
             item {
                 SignalsEmptyState(
                     category = state.selectedSignalCategory,
-                    isSupabaseConfigured = state.isSupabaseConfigured,
-                    onRefresh = onRefreshSignals,
-                    onSeedData = onSeedSignals,
-                    onOpenBackendConfig = onOpenBackendConfig
+                    onRefresh = onRefreshSignals
                 )
             }
             item {

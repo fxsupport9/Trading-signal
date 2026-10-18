@@ -26,7 +26,7 @@ import androidx.compose.material.icons.filled.CurrencyBitcoin
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.ShowChart
+import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Button
@@ -122,7 +122,7 @@ fun SignalCategoryHeader(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.ShowChart,
+                        imageVector = Icons.AutoMirrored.Filled.ShowChart,
                         contentDescription = "Commodities",
                         tint = if (isCommodities) Color.White else TextSecondary,
                         modifier = Modifier.size(18.dp)
@@ -484,10 +484,7 @@ private fun formatPrice(price: Double): String {
 @Composable
 fun SignalsEmptyState(
     category: SignalCategory,
-    isSupabaseConfigured: Boolean,
     onRefresh: () -> Unit,
-    onSeedData: () -> Unit,
-    onOpenBackendConfig: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -514,7 +511,7 @@ fun SignalsEmptyState(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.ShowChart,
+                    imageVector = Icons.AutoMirrored.Filled.ShowChart,
                     contentDescription = null,
                     tint = EmeraldPrimary,
                     modifier = Modifier.size(32.dp)
@@ -524,7 +521,7 @@ fun SignalsEmptyState(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "No ${category.displayName} Signals Found",
+                text = "No ${category.displayName} Signals Right Now",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = TextPrimary,
@@ -535,11 +532,7 @@ fun SignalsEmptyState(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = if (isSupabaseConfigured) {
-                    "Your PostgreSQL database is connected. When new signals are posted by analysts or automated strategies, they will appear in real time."
-                } else {
-                    "No signals loaded yet. Configure your Supabase backend or seed initial signals to verify database operations."
-                },
+                text = "Our analysts and algorithmic models are continuously monitoring the markets for high-probability setups. Pull down or tap refresh to update.",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = TextSecondary,
                     fontSize = 13.sp,
@@ -550,46 +543,21 @@ fun SignalsEmptyState(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            Button(
+                onClick = onRefresh,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = EmeraldPrimary
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.testTag("empty_refresh_button")
             ) {
-                OutlinedButton(
-                    onClick = onRefresh,
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = EmeraldDark
-                    ),
-                    modifier = Modifier.testTag("empty_refresh_button")
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = "Refresh",
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("Refresh")
-                }
-
-                if (isSupabaseConfigured) {
-                    Button(
-                        onClick = onSeedData,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = EmeraldPrimary
-                        ),
-                        modifier = Modifier.testTag("seed_signals_button")
-                    ) {
-                        Text("Seed Database")
-                    }
-                } else {
-                    Button(
-                        onClick = onOpenBackendConfig,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = EmeraldPrimary
-                        ),
-                        modifier = Modifier.testTag("open_backend_config_button")
-                    ) {
-                        Text("Setup Backend")
-                    }
-                }
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Refresh",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Refresh Signals")
             }
         }
     }

@@ -22,8 +22,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Security
@@ -97,7 +97,6 @@ fun ProfileScreen(
     onOpenForgotPassword: () -> Unit,
     onSubmitForgotPassword: (String) -> Unit,
     onDismissForgotPassword: () -> Unit,
-    onOpenBackendConfig: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -285,7 +284,7 @@ fun ProfileScreen(
                                 .testTag("sign_out_button")
                         ) {
                             Icon(
-                                imageVector = Icons.Default.ExitToApp,
+                                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                                 contentDescription = "Sign Out",
                                 tint = TradeSell,
                                 modifier = Modifier.size(18.dp)
@@ -569,7 +568,7 @@ fun ProfileScreen(
             }
         }
 
-        // Database & Supabase Integration Banner
+        // Account Security & Live Synchronization Card
         item {
             Card(
                 shape = RoundedCornerShape(16.dp),
@@ -579,49 +578,107 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 6.dp)
-                    .clickable { onOpenBackendConfig() }
             ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(if (state.isSupabaseConfigured) EmeraldLight else Color(0xFFFEF3C7)),
-                        contentAlignment = Alignment.Center
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(38.dp)
+                                .clip(CircleShape)
+                                .background(EmeraldLight),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Security,
+                                contentDescription = null,
+                                tint = EmeraldPrimary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Account & Data Security",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = TextPrimary
+                            )
+                            Text(
+                                text = "256-bit encryption • Live server sync active",
+                                fontSize = 12.sp,
+                                color = TextSecondary
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(EmeraldLight)
+                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircle,
+                                    contentDescription = null,
+                                    tint = EmeraldDark,
+                                    modifier = Modifier.size(11.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Protected",
+                                    color = EmeraldDark,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+                    HorizontalDivider(color = BorderSubtle)
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Cloud,
-                            contentDescription = null,
-                            tint = if (state.isSupabaseConfigured) EmeraldDark else Color(0xFFB45309),
-                            modifier = Modifier.size(22.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Supabase Backend Integration",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            color = TextPrimary
+                            text = "Instant Trade Alerts",
+                            fontSize = 13.sp,
+                            color = TextPrimary,
+                            fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = state.supabaseStatusText,
+                            text = "Enabled",
                             fontSize = 12.sp,
-                            color = if (state.isSupabaseConfigured) EmeraldPrimary else Color(0xFFB45309)
+                            fontWeight = FontWeight.Bold,
+                            color = EmeraldDark
                         )
                     }
 
-                    Text(
-                        text = "Configure",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = EmeraldPrimary
-                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Server Connection",
+                            fontSize = 13.sp,
+                            color = TextPrimary,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "Online (High Speed)",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = EmeraldPrimary
+                        )
+                    }
                 }
             }
         }

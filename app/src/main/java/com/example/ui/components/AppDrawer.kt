@@ -15,16 +15,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ContactSupport
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.ContactSupport
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -66,7 +66,6 @@ fun SignalVerseDrawerSheet(
     onOpenPrivacy: () -> Unit,
     onOpenTerms: () -> Unit,
     onOpenMarketingAssets: () -> Unit = {},
-    onOpenBackendConfig: () -> Unit,
     onCloseDrawer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -101,7 +100,7 @@ fun SignalVerseDrawerSheet(
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Default.TrendingUp,
+                                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
                                 contentDescription = null,
                                 tint = Color.White,
                                 modifier = Modifier.size(28.dp)
@@ -164,7 +163,7 @@ fun SignalVerseDrawerSheet(
             // Main Navigation Links
             DrawerItem(
                 label = "Home / Signals",
-                icon = Icons.Default.TrendingUp,
+                icon = Icons.AutoMirrored.Filled.TrendingUp,
                 selected = currentTab == AppTab.SIGNAL,
                 onClick = {
                     onNavigateTab(AppTab.SIGNAL)
@@ -227,7 +226,7 @@ fun SignalVerseDrawerSheet(
 
             DrawerItem(
                 label = "Contact Support",
-                icon = Icons.Default.ContactSupport,
+                icon = Icons.AutoMirrored.Filled.ContactSupport,
                 selected = false,
                 onClick = {
                     onCloseDrawer()
@@ -274,18 +273,6 @@ fun SignalVerseDrawerSheet(
                     onOpenMarketingAssets()
                 },
                 testTag = "drawer_nav_marketing"
-            )
-
-            // Backend & Database Config
-            DrawerItem(
-                label = "Backend & Supabase Setup",
-                icon = Icons.Default.Cloud,
-                selected = false,
-                onClick = {
-                    onCloseDrawer()
-                    onOpenBackendConfig()
-                },
-                testTag = "drawer_nav_backend"
             )
 
             Spacer(modifier = Modifier.height(24.dp))

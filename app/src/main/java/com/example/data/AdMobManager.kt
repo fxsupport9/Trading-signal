@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -74,12 +75,16 @@ object AdMobManager {
     var isRewardedAdReady by mutableStateOf(false)
         private set
 
-    fun initialize(context: Context) {
-        if (isInitialized) return
+    fun initialize(context: Context, onReady: (() -> Unit)? = null) {
+        if (isInitialized) {
+            onReady?.invoke()
+            return
+        }
         try {
             MobileAds.initialize(context) { initializationStatus ->
                 Log.d(TAG, "AdMob Initialized: $initializationStatus")
                 isInitialized = true
+                onReady?.invoke()
             }
         } catch (e: Exception) {
             Log.e(TAG, "AdMob initialization error", e)
@@ -197,41 +202,54 @@ fun AdMobBannerView(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                factory = { context ->
-                    AdView(context).apply {
-                        setAdSize(AdSize.BANNER)
-                        adUnitId = currentUnitId
-                        adListener = object : AdListener() {
-                            override fun onAdLoaded() {
-                                adLoaded = true
-                                adFailed = false
-                            }
+            key(currentUnitId) {
+                var adViewInstance by remember { mutableStateOf<AdView?>(null) }
 
-                            override fun onAdFailedToLoad(error: LoadAdError) {
-                                Log.w("AdMobBanner", "Banner failed ($currentUnitId): ${error.message}")
-                                if (useTestAdIfFailed && currentUnitId != AdMobManager.TEST_BANNER_AD_UNIT_ID) {
-                                    // Fallback to Google test banner while AdMob reviews user's app
-                                    currentUnitId = AdMobManager.TEST_BANNER_AD_UNIT_ID
-                                    loadAd(AdRequest.Builder().build())
-                                } else {
-                                    adFailed = true
-                                }
-                            }
+                DisposableEffect(currentUnitId) {
+                    onDispose {
+                        try {
+                            adViewInstance?.destroy()
+                        } catch (e: Exception) {
+                            Log.w("AdMobBanner", "Cleanup error", e)
                         }
-                        loadAd(AdRequest.Builder().build())
-                    }
-                },
-                update = { adView ->
-                    if (adView.adUnitId != currentUnitId) {
-                        adView.adUnitId = currentUnitId
-                        adView.loadAd(AdRequest.Builder().build())
                     }
                 }
-            )
+
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    factory = { context ->
+                        AdView(context).apply {
+                            adViewInstance = this
+                            setAdSize(AdSize.BANNER)
+                            // Ad unit ID can ONLY be set once on an AdView instance
+                            adUnitId = currentUnitId
+                            adListener = object : AdListener() {
+                                override fun onAdLoaded() {
+                                    adLoaded = true
+                                    adFailed = false
+                                }
+
+                                override fun onAdFailedToLoad(error: LoadAdError) {
+                                    Log.w("AdMobBanner", "Banner failed ($currentUnitId): ${error.message} (code: ${error.code})")
+                                    if (useTestAdIfFailed && currentUnitId != AdMobManager.TEST_BANNER_AD_UNIT_ID) {
+                                        // Switch state so key(currentUnitId) recreates a brand new AdView with official test unit ID
+                                        currentUnitId = AdMobManager.TEST_BANNER_AD_UNIT_ID
+                                    } else {
+                                        adFailed = true
+                                    }
+                                }
+                            }
+                            loadAd(AdRequest.Builder().build())
+                        }
+                    },
+                    update = {
+                        // Crucial: NEVER call adView.adUnitId = ... here!
+                        // AdMob throws java.lang.IllegalStateException: The ad unit ID can only be set once on AdView.
+                    }
+                )
+            }
         }
     }
 }
